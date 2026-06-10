@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Рассмотрение рецензии</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h4>{{ review.book.title }}</h4>
+
+        <p><strong>Пользователь:</strong> {{ review.user.full_name }}</p>
+        <p><strong>Оценка:</strong> {{ review.rating }} — {{ RATINGS[review.rating] }}</p>
+        <p><strong>Дата:</strong> {{ review.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+
+        <h5>Текст рецензии</h5>
+        <div class="border rounded p-3 mb-3">
+            {{ md_to_html(review.text)|safe }}
+        </div>
+
+        <form method="post" action="{{ url_for('approve_review', review_id=review.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-success">Одобрить</button>
+        </form>
+
+        <form method="post" action="{{ url_for('reject_review', review_id=review.id) }}" class="d-inline">
+            <button type="submit" class="btn btn-danger">Отклонить</button>
+        </form>
+
+        <a href="{{ url_for('moderation_reviews') }}" class="btn btn-secondary">Назад</a>
+    </div>
+</div>
+{% endblock %}

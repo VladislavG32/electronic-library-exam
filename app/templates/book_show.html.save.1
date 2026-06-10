@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        {% if book.cover %}
+            <img src="{{ url_for('image', cover_id=book.cover.id) }}" class="img-fluid rounded border">
+        {% endif %}
+    </div>
+
+    <div class="col-md-8">
+        <h1>{{ book.title }}</h1>
+        
+
+        <p><strong>Автор:</strong> {{ book.author }}</p>
+        <p><strong>Год:</strong> {{ book.year }}</p>
+        <p><strong>Издательство:</strong> {{ book.publisher }}</p>
+        <p><strong>Объём:</strong> {{ book.pages }} страниц</p>
+
+        <p>
+            <strong>Жанры:</strong>
+            {% for genre in book.genres %}
+                <span class="badge text-bg-secondary">{{ genre.name }}</span>
+            {% endfor %}
+        </p>
+
+        <h4>Описание</h4>
+        <div>{{ md_to_html(book.short_description)|safe }}</div>
+
+        {% if current_user.is_authenticated and not my_review %}
+            <a href="{{ url_for('review_create', book_id=book.id) }}" class="btn btn-primary mt-3">Написать рецензию</a>
+        {% endif %}
+    </div>
+</div>
+
+<hr>
+
+<h2>Рецензии</h2>
+
+{% if my_review %}
+    <div class="alert alert-info">
+        Ваша рецензия имеет статус: <strong>{{ my_review.status.name }}</strong>
+    </div>
+{% endif %}
+
+{% for review in reviews %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5>{{ review.user.full_name }}</h5>
+            <p><strong>Оценка:</strong> {{ review.rating }} — {{ RATINGS[review.rating] }}</p>
+            <div>{{ md_to_html(review.text)|safe }}</div>
+        </div>
+    </div>
+{% else %}
+    <p>Одобренных рецензий пока нет.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,10 @@
+ve/
+__pycache__/
+*.pyc
+.env
+app/.env
+app/media/images/*
+!app/media/images/.gitkeep
+gunicorn.ctl
+*.log
+.DS_Store
