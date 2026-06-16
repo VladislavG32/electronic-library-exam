@@ -103,10 +103,11 @@ class BookCover(db.Model):
     @property
     def storage_filename(self):
         ext = ''
-        if '.' in self.file_name:
-            ext = '.' + self.file_name.rsplit('.', 1)[1]
-        return f'{self.id}{ext}'
 
+        if self.file_name and '.' in self.file_name:
+            ext = '.' + self.file_name.rsplit('.', 1)[1].lower()
+
+        return f'{self.md5_hash}{ext}'
 
 class ReviewStatus(db.Model):
     __tablename__ = 'review_statuses'
